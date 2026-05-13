@@ -4,17 +4,24 @@ A collection of reusable AI agent skills. Compatible with Claude Code, Codex CLI
 
 ## Install
 
-**Single skill:**
+**Single skill (global):**
 ```sh
-npx skills add crowdlinker/skills github-commit-and-pr-conventions
+npx skills add crowdlinker/skills --skill github-commit-and-pr-conventions --agent claude-code -g -y
 ```
 
-**All skills:**
+**All skills (global):**
 ```sh
-npx skills add crowdlinker/skills
+npx skills add crowdlinker/skills --agent claude-code -g -y
 ```
 
-Skills install to `.claude/skills/` (project) or `~/.claude/skills/` (global).
+**Project-level (current repo only):**
+```sh
+npx skills add crowdlinker/skills --agent claude-code -y
+```
+
+> **Note:** The `--agent claude-code` flag is required. Without it, the interactive prompt may install to a different agent (e.g. Warp) and the skill won't appear in Claude Code. Global skills install to `~/.claude/skills/`; project skills install to `.claude/skills/`.
+
+After installing, run `/reload-plugins` in Claude Code to pick up the new skill without restarting.
 
 ## Skills
 
