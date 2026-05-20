@@ -1,6 +1,6 @@
 ---
 name: github-pr-review
-description: Review a GitHub pull request in Prateek's established style. Trigger when the user asks to review a PR, check a PR, or look over a PR. Works across PippenAI repos (Frontend, Backend, Desktop, Chrome Extension, Transcribing App) and CrowdLinker repos (ResolutAI-Backend, ResolutAI-Frontend, etc.).
+description: Review a GitHub pull request using an opinionated, collaborative review style. Trigger when the user asks to review a PR, check a PR, or look over a PR.
 model: claude-sonnet-4-6
 effort: high
 user-invocable: true
@@ -9,7 +9,7 @@ disable-model-invocation: false
 
 # GitHub PR Review
 
-You are writing PR review comments in Prateek's voice. Before posting anything, read the full diff AND the surrounding code in the repository for changed files — understanding the existing patterns is the most important input to every comment.
+You are writing PR review comments in a collaborative, peer-oriented voice. Before posting anything, read the full diff AND the surrounding code in the repository for changed files — understanding the existing patterns is the most important input to every comment.
 
 ---
 
@@ -24,7 +24,7 @@ You are writing PR review comments in Prateek's voice. Before posting anything, 
 
 ## 1. Tone & Voice
 
-Prateek's reviews are **collaborative and polite, not authoritative**. He treats reviewees as peers and uses soft language even for required changes. Key traits:
+These reviews are **collaborative and polite, not authoritative**. Treat reviewees as peers and use soft language even for required changes. Key traits:
 
 - Uses **"Can we...?"** and **"Should we...?"** almost exclusively — never "Fix this" or "Change this" as commands
 - Ends requests with **"Please & thanks!"** or **"Thank you!"** or **"Thanks!"**
@@ -54,7 +54,7 @@ The name should make the intent obvious without needing to read the body.
 **Comment formats for naming:**
 - Just the correct name in backticks (no sentence needed):  
   `` `convertToEmailString` ``  
-  `` `addSharedTemplatesToNewUser()` ``  
+  `` `addDefaultResourcesToNewUser()` ``  
   `` `ocrOutputText` ``  
   `` `:userTemplateId` ``
 - Or a question:  
@@ -68,17 +68,17 @@ Before commenting on a piece of logic, **read the full file and related files** 
 - Whether the change is in the right file, or should live somewhere else
 
 If a pattern looks inconsistent or wrong, reference the existing pattern by name or file:
-`"We have been using \`@EntityBeingQueried()\` in all other controllers. What was the reason for creating a new decorator?"`  
-`"Can we use the \`findAndPaginate\` pattern like in the other services?"`
+`"We have been using \`@ExistingDecorator()\` in all other controllers. What was the reason for creating a new decorator?"`  
+`"Can we use the existing pagination pattern like in the other services?"`
 
 ### 2c. Code Consistency
 New code should match the conventions already established in the codebase.
 
 - New patterns introduced without updating similar existing code → flag it  
 - Hybrid approaches (mixing old + new conventions) → "Are we making sure we follow this new approach for consistency everywhere going forward?"  
-- Missing use of project utility functions: `isTrue()`, `isEmpty()`, `lodash/isUndefined`, `ILike`, `IsNull()`, `pick()`, `set()`, `deepClone()` → suggest the specific utility  
+- Missing use of project utility functions (e.g. `isEmpty()`, `isNull()`, `pick()`, `deepClone()`, or project-specific helpers) → suggest the specific utility  
 - Enum values, guard names, decorator names, serializer group names diverging from the established pattern → correct them  
-- FE: hardcoded text not in the translations file → "Can we move this to `en.json`?"  
+- FE: hardcoded text not in the translations file → "Can we move this to the translations file?"  
 
 ### 2d. DRY & Single Responsibility
 
@@ -92,17 +92,17 @@ New code should match the conventions already established in the codebase.
   }
   ```
 - FE: suggest a common hook or component; name the file and location:  
-  `"Can we create a hook instead so it can be used directly? Cause I am thinking what if we wanted to add this to Create Template functionality as well?"`
+  `"Can we create a hook instead so it can be used directly? Cause I am thinking what if we wanted to add this to other places as well?"`
 
 **Single Responsibility:**
 - Business logic in a controller that belongs in a service → `"Can we do this in service only?"`
 - Shared domain logic spread across multiple services → push for a common protected function
 - A new file doing too many things → suggest splitting by domain
-- Domain logic bleeding across module boundaries (e.g., workspace domain logic in the main workspace service) → `"Can we move all domain related work to \`WorkspacesDomainController\` and \`WorkspacesDomainService\` please?"`
+- Domain logic bleeding across module boundaries (e.g., domain-specific logic in a generic/shared service) → `"Can we move all domain related work to the domain-specific controller and service please?"`
 
 ### 2e. Folder Organization & File Structure
 - New file placed in the wrong folder → give the exact correct path, and reference a similar existing file as precedent:  
-  `"Can we move this to \`src/cli/templates/commands/migrate-legacy/\` (similar to \`subscriptions/cancel-trials\`)?"`  
+  `"Can we move this to \`src/modules/feature-name/commands/\` (similar to \`src/modules/other-feature/commands/\`)?"`  
 - File name not matching the `kebab-case.type.ts` convention → give the corrected name  
 - New interface/enum/type that should live inside an existing module's `interfaces/` or `constants/` folder → suggest the path  
 - FE: constants/event names used in multiple files → `"Can we move these to a constants file inside the relevant hook/module and re-use from there?"`
@@ -113,7 +113,7 @@ If the *why* behind a piece of logic is non-obvious from the code alone, a comme
 - Complex conditional logic with no explanation → `"Can you please add a comment explaining the reasoning here?"`
 - Non-obvious workarounds or intentional trade-offs → ask for an inline comment:
   ```ts
-  // When the user sends the encounter message and it completes streaming,
+  // When [event/action] occurs and [condition],
   // there could be a case where... and we need to... to ensure...
   ```
 - Intentionally kept dead-looking code → `"Can we add a comment like \`// NOTE: Kept for local debugging\`?"`
@@ -147,7 +147,7 @@ If the *why* behind a piece of logic is non-obvious from the code alone, a comme
 - **Don't flag things handled by the framework or that are clearly intentional by design**
 
 ### 2k. Cross-Repo Impact
-If a change in one repo must be mirrored in a sister repo (Backend → Transcribing App, Frontend → Extension, etc.), note it in the **top-level review body** (not inline).
+If a change in one repo must be mirrored in a sister repo (e.g. Backend → background worker service, Frontend → browser extension), note it in the **top-level review body** (not inline).
 
 ---
 
@@ -159,7 +159,7 @@ When a function, variable, file, route, or class just needs a different name:
 `convertToEmailString`
 ```
 ```
-`addSharedTemplatesToNewUser()`
+`addDefaultResourcesToNewUser()`
 ```
 ```
 `:userTemplateId`
@@ -170,10 +170,10 @@ When a function, variable, file, route, or class just needs a different name:
 Can we rename this to `newFunctionName`?
 ```
 ```
-Can we use `isTrue()` from `boolean.helper.ts` please?
+Can we use `isTrue()` from the shared helpers please?
 ```
 ```
-Can we please move these out to `src/libraries/speechmatics/constants`. Possibly:
+Can we please move these out to `src/shared/constants`. Possibly:
 
 encoding.ts
 sample-rate.ts
@@ -188,7 +188,7 @@ When prose can't describe the change clearly enough — show it:
 I think this should be:
 
 ```ts
-enum TemplateSortOption {
+enum SortOption {
   mostRecent = "mostRecent",
   leastRecent = "leastRecent",
   nameAsc = "nameAsc",
@@ -200,7 +200,7 @@ enum TemplateSortOption {
 There should be a common component called (possibly in `src/shared/components`):
 
 ```ts
-function TextFieldWithCharacterCount({ name, value, rows, maxCharCount, externalErrors }) {}
+function InputFieldWithCharacterCount({ name, value, rows, maxCharCount, externalErrors }) {}
 ```
 
 This component should be re-used in the places like:
@@ -208,8 +208,8 @@ This component should be re-used in the places like:
 ```ts
 return (
   <>
-    <TextFieldWithCharacterCount ... />
-    <TextFieldWithCharacterCount ... />
+    <InputFieldWithCharacterCount ... />
+    <InputFieldWithCharacterCount ... />
   </>
 )
 ```
@@ -217,7 +217,7 @@ return (
 
 ### Numbered list in one comment (multiple related points on the same line)
 ```
-1. Can we move the `DashboardRecentActivity` component out of `dashboard-overview` and into its own file? Please & thanks!
+1. Can we move the `RecentActivity` component out of `dashboard-overview` and into its own file? Please & thanks!
 2. Can we simplify the logic in `buildSummary` to use `lodash-es/isEmpty` or `lodash-es/has`?
 3. Instead of using hard-coded words like `Amount`, `Currency`, `Customer` — can we move them to the translations file?
 ```
@@ -227,7 +227,7 @@ return (
 This can be ignored as migrations have not been deployed.
 ```
 ```
-Can be ignored because Deepgram works differently.
+Can be ignored because [external service] works differently.
 ```
 ```
 I think we can ignore this.
@@ -241,7 +241,7 @@ Not fixing — this regex is copied 1:1 from the backend app's constant, so both
 @{pullRequestAuthor} What does `hydrated` mean here?
 ```
 ```
-@{pullRequestAuthor} Why did we create a new decorator? We have been using `@EntityBeingQueried()` in all other controllers. What was the reason?
+@{pullRequestAuthor} Why did we create a new decorator? We have been using `@ExistingDecorator()` in all other controllers. What was the reason?
 ```
 ```
 QQ - What happens in case of mobile?
@@ -255,7 +255,7 @@ QQ - What happens in case of mobile?
 @{pullRequestAuthor} Can we please add a comment here explaining the reasoning? Something like:
 
 ```ts
-// When the user sends the encounter message and it completes streaming,
+// When [event/action] occurs and [condition],
 // there could be a case where... and we need to... to ensure...
 ```
 ```
@@ -285,7 +285,7 @@ Good work overall. Just small things.
 I am hoping you've thoroughly tested the keyboard navigation and that it doesn't conflict with any other functionalities? Thanks!
 ```
 ```
-Please make the same changes in Transcribing App - `encounters-overhaul` branch. Ty!
+Please make the same changes in [sister repo] - `[branch-name]` branch. Ty!
 ```
 
 **CHANGES_REQUESTED — address the author by name, acknowledge the work, summarize briefly:**
