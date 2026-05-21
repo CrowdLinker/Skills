@@ -28,6 +28,7 @@ After installing, run `/reload-plugins` in Claude Code to pick up the new skill 
 | Skill | Description |
 |-------|-------------|
 | [github-commit-and-pr-conventions](./github-commit-and-pr-conventions/SKILL.md) | Conventional Commits format, branch targeting, and PR structure rules for GitHub |
+| [github-pr-review](./github-pr-review/SKILL.md) | Opinionated, collaborative PR review style for GitHub pull requests |
 
 ## Manual installation (other AI agents)
 
