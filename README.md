@@ -7,6 +7,7 @@ A collection of reusable AI agent skills. Compatible with Claude Code, Codex CLI
 **Single skill (global):**
 ```sh
 npx skills add crowdlinker/skills --skill github-commit-and-pr-conventions --agent claude-code -g -y
+npx skills add crowdlinker/skills --skill github-pr-review --agent claude-code -g -y
 ```
 
 **All skills (global):**
