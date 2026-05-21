@@ -75,7 +75,39 @@ To check: use the GitHub MCP tool to list branches and look for `develop` / `dev
 ## 3. Pull Request Rules
  
 ### Title
-Reuse the commit title format: `<prefix>: <short summary>`. If the PR spans multiple commits, derive the title from the most significant change.
+**Never use `feat:`, `fix:`, or `chore:` prefixes in PR titles.** PR titles should describe the key feature(s) or work done, in sentence case.
+
+**Format rules:**
+- Sentence case (only capitalize the first word and proper nouns)
+- Be descriptive — name all significant areas touched
+- Multiple changes: join with `, `, ` and `, ` + `, or prefix with an area name followed by `: `
+- Titles can be longer than a typical commit subject — clarity beats brevity here
+
+**Single focused change:**
+```
+Stories Kanban board view with drag-and-drop
+Granola integration: connect, import notes, and AI processing
+```
+
+**Multiple areas bundled:**
+```
+Story/spec editor improvements, per-project settings, list sorting, and bug fixes
+Onboarding: slug editing and mandatory first project step
+Workspace role enforcement: integrations, billing, and sidebar
+```
+
+**With a story ID (single task):**
+```
+AST-15 - User forgot password
+PIP-123 - Delete user & user related entities
+SC-12314 - Admin: make encounter prompts dynamic
+```
+
+**With story IDs (multiple tasks):**
+```
+User forgot password, delete user & related entities, admin dynamic encounter prompts
+```
+(When multiple tasks, drop the story ID prefix from the title and list IDs in the References section instead.)
  
 ### Description / Body
 Structure the PR body like this:
@@ -91,7 +123,13 @@ Structure the PR body like this:
  
 ## Notes
 <optional: migration steps, breaking changes, caveats, follow-ups>
+ 
+### References to Tasks:
+1. [AST-15]()
+2. [PIP-123]()
 ```
+ 
+**Always include the "References to Tasks" section at the end** if one or more story IDs are known. Omit it only when there are no associated stories.
  
 **Never include a "Testing Plan" section** unless the user explicitly asks for one.
  
@@ -115,12 +153,14 @@ Don't add labels or reviewers unless the user asks.
  
 Before every commit/PR action, run through:
  
-1. ✅ What's the most significant change type? → pick prefix
-2. ✅ Is the title under ~72 chars and imperative?
+1. ✅ What's the most significant change type? → pick commit prefix
+2. ✅ Is the commit title under ~72 chars and imperative?
 3. ✅ Does the body (if needed) explain *why*, not just *what*?
 4. ✅ Does `develop` branch exist? → target accordingly
 5. ✅ Is this a **new** PR? → assign current user
-6. ✅ Is this a PR body? → no Testing Plan section
+6. ✅ PR title: no `feat:`/`fix:`/`chore:` prefix — use feature name(s), prepend story ID if single task
+7. ✅ Are there story IDs? → add `### References to Tasks:` at end of PR body
+8. ✅ Is this a PR body? → no Testing Plan section
 ---
  
 ## Tool Usage Notes (GitHub MCP)
